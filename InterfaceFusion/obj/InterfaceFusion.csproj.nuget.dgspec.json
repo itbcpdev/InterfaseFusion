@@ -1,31 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Fuentes\\InterfaseFusion\\InterfaceFusion\\InterfaceFusion.csproj": {}
+    "F:\\InterfaceFusion\\InterfaceFusion\\InterfaceFusion.csproj": {}
   },
   "projects": {
-    "D:\\Fuentes\\InterfaseFusion\\InterfaceFusion\\InterfaceFusion.csproj": {
+    "F:\\InterfaceFusion\\InterfaceFusion\\InterfaceFusion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Fuentes\\InterfaseFusion\\InterfaceFusion\\InterfaceFusion.csproj",
+        "projectUniqueName": "F:\\InterfaceFusion\\InterfaceFusion\\InterfaceFusion.csproj",
         "projectName": "InterfaceFusion",
-        "projectPath": "D:\\Fuentes\\InterfaseFusion\\InterfaceFusion\\InterfaceFusion.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\Fuentes\\InterfaseFusion\\InterfaceFusion\\obj\\",
+        "projectPath": "F:\\InterfaceFusion\\InterfaceFusion\\InterfaceFusion.csproj",
+        "packagesPath": "C:\\Users\\USUARIO\\.nuget\\packages\\",
+        "outputPath": "F:\\InterfaceFusion\\InterfaceFusion\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\USUARIO\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows7.0"
+          "net6.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\TeliumSDK\\Add-on PCL for Windows 2.16.00\\SDK\\UWP": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -63,7 +59,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -75,7 +72,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }

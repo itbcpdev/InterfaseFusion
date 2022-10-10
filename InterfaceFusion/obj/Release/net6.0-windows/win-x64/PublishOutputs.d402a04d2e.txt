@@ -1,0 +1,11 @@
+D:\Entregables\InterfaceFusion.exe
+D:\Entregables\InterfaceFusion.dll
+D:\Entregables\InterfaceFusion.deps.json
+D:\Entregables\InterfaceFusion.runtimeconfig.json
+D:\Entregables\InterfaceFusion.dll.config
+D:\Entregables\InterfaceFusion.pdb
+D:\Entregables\Dapper.dll
+D:\Entregables\Dapper.Contrib.dll
+D:\Entregables\System.Data.SqlClient.dll
+D:\Entregables\sni.dll
+D:\Entregables\FusionClass.dll

@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFusion));
             this.dgvTransactions = new System.Windows.Forms.DataGridView();
             this.numero = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.soles = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,6 +51,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtFusionIp = new System.Windows.Forms.TextBox();
             this.btnConectar = new System.Windows.Forms.Button();
+            this.txtMessage = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTransactions)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,7 +85,7 @@
             this.fecsistema,
             this.volumenfinal,
             this.montofinal});
-            this.dgvTransactions.Location = new System.Drawing.Point(12, 62);
+            this.dgvTransactions.Location = new System.Drawing.Point(10, 50);
             this.dgvTransactions.MultiSelect = false;
             this.dgvTransactions.Name = "dgvTransactions";
             this.dgvTransactions.ReadOnly = true;
@@ -218,7 +220,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 25);
+            this.label1.Location = new System.Drawing.Point(10, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 15);
             this.label1.TabIndex = 1;
@@ -226,14 +228,15 @@
             // 
             // txtFusionIp
             // 
-            this.txtFusionIp.Location = new System.Drawing.Point(80, 22);
+            this.txtFusionIp.Location = new System.Drawing.Point(71, 15);
             this.txtFusionIp.Name = "txtFusionIp";
+            this.txtFusionIp.ReadOnly = true;
             this.txtFusionIp.Size = new System.Drawing.Size(141, 23);
             this.txtFusionIp.TabIndex = 2;
             // 
             // btnConectar
             // 
-            this.btnConectar.Location = new System.Drawing.Point(227, 22);
+            this.btnConectar.Location = new System.Drawing.Point(10, 547);
             this.btnConectar.Name = "btnConectar";
             this.btnConectar.Size = new System.Drawing.Size(123, 23);
             this.btnConectar.TabIndex = 3;
@@ -241,20 +244,31 @@
             this.btnConectar.UseVisualStyleBackColor = true;
             this.btnConectar.Click += new System.EventHandler(this.btnConectar_Click);
             // 
+            // txtMessage
+            // 
+            this.txtMessage.Location = new System.Drawing.Point(139, 547);
+            this.txtMessage.Name = "txtMessage";
+            this.txtMessage.ReadOnly = true;
+            this.txtMessage.Size = new System.Drawing.Size(170, 23);
+            this.txtMessage.TabIndex = 4;
+            // 
             // frmFusion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1113, 559);
+            this.ClientSize = new System.Drawing.Size(1113, 582);
+            this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.btnConectar);
             this.Controls.Add(this.txtFusionIp);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvTransactions);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmFusion";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Interface Wayne Fusion";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmFusion_FormClosed);
             this.Load += new System.EventHandler(this.frmFusion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTransactions)).EndInit();
             this.ResumeLayout(false);
@@ -283,5 +297,6 @@
         private DataGridViewTextBoxColumn fecsistema;
         private DataGridViewTextBoxColumn volumenfinal;
         private DataGridViewTextBoxColumn montofinal;
+        private TextBox txtMessage;
     }
 }

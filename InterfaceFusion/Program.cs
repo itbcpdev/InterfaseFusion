@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace InterfaceFusion
 {
     internal static class Program
@@ -8,10 +10,33 @@ namespace InterfaceFusion
         [STAThread]
         static void Main()
         {
+
+            if (PriorProcess() != null)
+            {
+                MessageBox.Show("La interface ya se encuentra en ejecución");
+                return;
+            }
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            ApplicationConfiguration.Initialize();            
             Application.Run(new frmFusion());
+            Environment.Exit(1);
+        }
+
+        public static Process PriorProcess()
+        { 
+            Process curr = Process.GetCurrentProcess();
+            Process[] procs = Process.GetProcessesByName(curr.ProcessName);
+
+            foreach (Process p in procs)
+            {
+                if ((p.Id != curr.Id) && (p.MainModule.FileName == curr.MainModule.FileName))
+                { 
+                    return p;
+                }
+            }
+            return null;
         }
     }
 }

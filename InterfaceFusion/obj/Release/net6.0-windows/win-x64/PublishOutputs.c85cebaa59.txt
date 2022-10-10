@@ -1,0 +1,11 @@
+F:\Interface Fusion\InterfaceFusion.exe
+F:\Interface Fusion\InterfaceFusion.dll
+F:\Interface Fusion\InterfaceFusion.deps.json
+F:\Interface Fusion\InterfaceFusion.runtimeconfig.json
+F:\Interface Fusion\InterfaceFusion.dll.config
+F:\Interface Fusion\InterfaceFusion.pdb
+F:\Interface Fusion\Dapper.dll
+F:\Interface Fusion\Dapper.Contrib.dll
+F:\Interface Fusion\System.Data.SqlClient.dll
+F:\Interface Fusion\sni.dll
+F:\Interface Fusion\FusionClass.dll

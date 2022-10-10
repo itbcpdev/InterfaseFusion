@@ -23,7 +23,7 @@ namespace InterfaceFusion
             if (db.State == ConnectionState.Closed)
                 db.Open();
 
-            return db.Query<OP_TRAN_Dto>("select NUMERO, SOLES, PRODUCTO, PRECIO, GALONES, CARA, HORA, DOCUMENTO, DATEPROCE, CDTIPODOC, MANGUERA, FECSISTEMA, VolumenFinal, MontoFinal from OP_TRAN", commandType: CommandType.Text);
+            return db.Query<OP_TRAN_Dto>("select NUMERO, SOLES, PRODUCTO, PRECIO, GALONES, CARA, HORA, DOCUMENTO, DATEPROCE, CDTIPODOC, MANGUERA, FECSISTEMA, VolumenFinal, MontoFinal from OP_TRAN ORDER BY C_INTERNO DESC", commandType: CommandType.Text);
             //return db.GetAll<OP_TRAN>();
         }
 
@@ -42,10 +42,31 @@ namespace InterfaceFusion
             if (db.State == ConnectionState.Closed)
                 db.Open();
 
-            var sql = "select top 1 C_INTERNO from OP_TRAN ORDER BY C_INTERNO DESC";
-            var lastTransaction = db.QuerySingle(sql);
+            int output = 0;
 
-            return lastTransaction.C_INTERNO;
+            var sql = "select top 1 C_INTERNO from OP_TRAN ORDER BY C_INTERNO DESC";
+            var lastTransaction = db.QuerySingleOrDefault(sql);
+
+            if (lastTransaction == null)
+            {
+                sql = "select top 1 C_INTERNO from OP_TRAN_HIS ORDER BY C_INTERNO DESC";
+                lastTransaction = db.QuerySingleOrDefault(sql);
+
+                if (lastTransaction == null)
+                {
+                    output = 0;
+                }
+                else
+                {
+                    output = Convert.ToInt32(lastTransaction.C_INTERNO);
+                }
+            }
+            else
+            {
+                output = Convert.ToInt32(lastTransaction.C_INTERNO);
+            }
+          
+            return output;
             
         }
 

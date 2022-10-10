@@ -3,6 +3,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Windows.Forms;
 using System.Configuration;
 using System.ComponentModel;
+using Application = System.Windows.Forms.Application;
 
 namespace InterfaceFusion
 {
@@ -18,10 +19,13 @@ namespace InterfaceFusion
         }
 
         private void frmFusion_Load(object sender, EventArgs e)
-        {           
+        {
             txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];
             op_tranRepository = new OP_TRANRepository();
             dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
+            cFusion.Connection(txtFusionIp.Text);
+            tmrFusionProcesses.Enabled = true;
+            tmrFusionProcesses.Interval = 2000; //dos segudos
         }
 
         private void tmrFusionProcesses_Tick(object sender, EventArgs e)
@@ -39,12 +43,10 @@ namespace InterfaceFusion
                 // Obtener última transacción de Fusion
 
                 LastFusionSaleId = GetLastSaleFusion();
-                MessageBox.Show("Last Sale on Fusion: " + Convert.ToString(LastFusionSaleId));
 
                 // Obtener última transacción de Siges
 
-                LastSigesSaleId = op_tranRepository.GetLastOP_TRAN();
-                MessageBox.Show("Last Sale on Siges: " + Convert.ToString(LastSigesSaleId));
+                LastSigesSaleId = op_tranRepository.GetLastOP_TRAN();                
 
                 // Obtener diferencia según Id
 
@@ -63,51 +65,63 @@ namespace InterfaceFusion
 
                         // Insertar en tabla OP_TRAN
 
-                        op_tranRepository.Insert(op_tran);
-
-                        //Marcar transacción
-
-                        bool ClearSale = false;
-
-                        ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
-
-                        if (!ClearSale)
+                        if (op_tran.CONTROLADOR != null)
                         {
-                            MessageBox.Show("Error al marcar venta");
-                        }
+                            op_tranRepository.Insert(op_tran);
 
+                            //Marcar transacción
+
+                            bool ClearSale = false;
+
+                            ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
+
+                            if (!ClearSale)
+                            {
+                                MessageBox.Show("Error al marcar venta");
+                            }
+                        } 
                     }
                 }
 
-                // Obtener transacciones OP_TRAN
+                //Obtener transacciones OP_TRAN
 
                 dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
-              
+
             }
             catch (Exception ex)
-            {
-
+            {                
                 MessageBox.Show(ex.Message);
-
             }
             finally
-            { 
-                
+            {
+                ShiftClose();
             }
 
         }
 
         private void btnConectar_Click(object sender, EventArgs e)
         {
-            cFusion.Connection(txtFusionIp.Text);
-
-            tmrFusionProcesses.Interval = 2000; //dos segudos
+            txtMessage.Text = "Intentando conectarse a Fusion";
+            
+            try
+            {
+                cFusion.Connection(txtFusionIp.Text);
+                txtMessage.Text = "Conexión establecida";
+            }
+            catch (Exception)
+            {
+                txtMessage.Text = "No se pudo establecer conexión";
+            }
+            
+            //cFusion.Close();
         }
 
         public OP_TRAN FusionSaleById(int id)
         {
 
             OP_TRAN op_tran = new OP_TRAN();
+
+            //cFusion.Connection(txtFusionIp.Text);
 
             if (cFusion.ConnectionStatus())
             {
@@ -121,14 +135,49 @@ namespace InterfaceFusion
 
                     if (cFusionSale.GetPumpNr() != 0)
                     {
+
+                        string gradeName = "";
+
+                        cFusion.GetGrade(cFusionSale.GetGradeNr(), ref gradeName);
+
+                        //string totalVolume = "";
+                        //string totalMoney = "";
+
+                        //cFusion.GetTotalizers(cFusionSale.GetPumpNr(), cFusionSale.GetHoseNr(), ref totalVolume, ref totalMoney);
+
                         op_tran.C_INTERNO = cFusionSale.GetSaleID();
                         op_tran.CONTROLADOR = "01";
                         op_tran.NUMERO = Convert.ToString(cFusionSale.GetSaleID());
                         op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
-                        op_tran.PRODUCTO = Convert.ToString(cFusionSale.GetGradeNr()); //Obtener el nombre
+
+                        switch (gradeName)
+                        {
+                            case "G84":
+                                op_tran.PRODUCTO = "01";
+                                break;
+                            case "G90":
+                                op_tran.PRODUCTO = "02";
+                                break;
+                            case "G95":
+                                op_tran.PRODUCTO = "03";
+                                break;
+                            case "G97":
+                                op_tran.PRODUCTO = "03";
+                                break;
+                            case "DB5":
+                                op_tran.PRODUCTO = "05";
+                                break;
+                            case "GLP":
+                                op_tran.PRODUCTO = "07";
+                                break;
+                            default:
+                                op_tran.PRODUCTO = gradeName;
+                                break;
+                        }
+                        
                         op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
                         op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
-                        op_tran.CARA = Convert.ToString(cFusionSale.GetPumpNr());
+                        op_tran.CARA = Convert.ToString(cFusionSale.GetPumpNr()).PadLeft(2,'0');
                         op_tran.FECHA = DateTime.Now.Date;
                         op_tran.HORA = DateTime.Now;
                         op_tran.TURNO = "1";
@@ -137,9 +186,11 @@ namespace InterfaceFusion
                         op_tran.DATEPROCE = null;
                         op_tran.CDTIPODOC = null;
                         op_tran.MANGUERA = cFusionSale.GetHoseNr();
-                        op_tran.FECSISTEMA = null;
+                        op_tran.FECSISTEMA = DateTime.Now;
                         op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume());
                         op_tran.MontoFinal = 0;
+                        //op_tran.VolumenFinal = Convert.ToDecimal(totalVolume);
+                        //op_tran.MontoFinal = Convert.ToDecimal(totalMoney);
                         op_tran.IdTran = null;
 
                     }
@@ -149,6 +200,8 @@ namespace InterfaceFusion
                 {
                     MessageBox.Show(ex.Message);
                 }
+
+                //cFusion.Close();
             }
 
             return op_tran;
@@ -156,7 +209,7 @@ namespace InterfaceFusion
 
         public int GetLastSaleFusion()
         {
-            cFusion.Connection(txtFusionIp.Text);
+            //cFusion.Connection(txtFusionIp.Text);
 
             FusionClass.FusionSale cFusionSale = new FusionClass.FusionSale();
             
@@ -169,15 +222,18 @@ namespace InterfaceFusion
             }
             catch (Exception ex)
             {
+                //cFusion.Close();
                 MessageBox.Show(ex.Message);
             }
+
+            //cFusion.Close();
 
             return lastSaleId;
         }
 
         public bool ClearSaleFusion(int id)
         {
-            cFusion.Connection(txtFusionIp.Text);
+            //cFusion.Connection(txtFusionIp.Text);
 
             string error = "";
             string errorCode = "";
@@ -187,11 +243,14 @@ namespace InterfaceFusion
                 cFusion.ClearSale(ref id, "POS", "InvoicedBy=POS", ref error, ref errorCode);
             }
             catch (Exception ex)
-            {                
-                MessageBox.Show(ex.Message);
+            {
+                //cFusion.Close();
+                MessageBox.Show(ex.Message);                
                 return false;
             }
-           
+
+            //cFusion.Close();
+
             return true;
         }
 
@@ -206,7 +265,7 @@ namespace InterfaceFusion
 
                 //Cerrar turno en controlador
 
-                cFusion.Connection(txtFusionIp.Text);
+                //cFusion.Connection(txtFusionIp.Text);
 
                 string type = "S";
                 string status = "";
@@ -221,12 +280,15 @@ namespace InterfaceFusion
                 }
                 catch (Exception ex)
                 {
+                    //cFusion.Close();
                     MessageBox.Show(ex.Message);
                     return false;
                 }
                 finally
                 {
                     op_tranRepository.UpdateShift();
+                    dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
+                    //cFusion.Close();
                 }
 
             }
@@ -234,5 +296,10 @@ namespace InterfaceFusion
             return true;
         }
 
+        private void frmFusion_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Application.ExitThread();
+            //Application.Exit();
+        }
     }
 }
