@@ -26,6 +26,8 @@ namespace InterfaceFusion
             cFusion.Connection(txtFusionIp.Text);
             tmrFusionProcesses.Enabled = true;
             tmrFusionProcesses.Interval = 2000; //dos segudos
+            tmrFusionReconnect.Enabled = true;
+            tmrFusionReconnect.Interval = 3600000; //una hora
         }
 
         private void tmrFusionProcesses_Tick(object sender, EventArgs e)
@@ -296,10 +298,31 @@ namespace InterfaceFusion
             return true;
         }
 
-        private void frmFusion_FormClosed(object sender, FormClosedEventArgs e)
+        public bool Reconnect()
         {
-            //Application.ExitThread();
-            //Application.Exit();
+
+            tmrFusionProcesses.Enabled = false;
+
+            try
+            {
+                cFusion.Close();
+                cFusion.Connection(txtFusionIp.Text);
+            }
+            catch (Exception ex)
+            {
+                tmrFusionProcesses.Enabled = true;                
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+
+            tmrFusionProcesses.Enabled = true;
+
+            return true;
+        }
+
+        private void tmrFusionReconnect_Tick(object sender, EventArgs e)
+        {
+            Reconnect();
         }
     }
 }
