@@ -25,9 +25,9 @@ namespace InterfaceFusion
             dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
             cFusion.Connection(txtFusionIp.Text);
             tmrFusionProcesses.Enabled = true;
-            tmrFusionProcesses.Interval = 2000; //dos segudos
-            tmrFusionReconnect.Enabled = true;
-            tmrFusionReconnect.Interval = 3600000; //una hora
+            tmrFusionProcesses.Interval = Convert.ToInt16(ConfigurationManager.AppSettings["GetSaleInterval"]) * 1000; ; //Intervalo en segundos según configuración
+            tmrFusionReconnect.Enabled = false;
+            tmrFusionReconnect.Interval = 3600000; //Una hora para reconexión con el controlador Fusion
         }
 
         private void tmrFusionProcesses_Tick(object sender, EventArgs e)
@@ -48,7 +48,7 @@ namespace InterfaceFusion
 
                 // Obtener última transacción de Siges
 
-                LastSigesSaleId = op_tranRepository.GetLastOP_TRAN();                
+                LastSigesSaleId = op_tranRepository.GetLastOP_TRAN();
 
                 // Obtener diferencia según Id
 
@@ -83,11 +83,16 @@ namespace InterfaceFusion
                             }
                         } 
                     }
+
+                    //Obtener transacciones OP_TRAN
+
+                    dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
+
                 }
 
                 //Obtener transacciones OP_TRAN
 
-                dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
+                //dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
 
             }
             catch (Exception ex)
@@ -323,6 +328,18 @@ namespace InterfaceFusion
         private void tmrFusionReconnect_Tick(object sender, EventArgs e)
         {
             Reconnect();
+        }
+
+        private void frmFusion_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                cFusion.Close();                
+            }
+            catch (Exception ex)
+            {                
+                MessageBox.Show(ex.Message);                
+            }
         }
     }
 }

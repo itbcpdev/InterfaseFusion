@@ -16,7 +16,7 @@ namespace InterfaceFusion
         public int INTERVAL1 { get; set; }
         public int INTERVAL2 { get; set; }
         public int INTERVAL3 { get; set; }
-        public DateTime FECHA { get; set; }
+        public string FECHA { get; set; }
         public string Cnx { get; set; }
         public string Cierre { get; set; }
     }
