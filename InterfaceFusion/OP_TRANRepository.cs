@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace InterfaceFusion
 {
@@ -68,6 +69,31 @@ namespace InterfaceFusion
           
             return output;
             
+        }
+
+        public bool CheckIdOP_TRAN(int Id)
+        {
+            using IDbConnection db = new SqlConnection(AppConnection.ConnectionString);
+            if (db.State == ConnectionState.Closed)
+                db.Open();
+            bool output = false;
+
+            var parameters = new { c_interno = Id};
+
+            var sql = "select top 1 C_INTERNO from OP_TRAN WHERE C_INTERNO = @c_interno";
+            var lastTransaction = db.QuerySingleOrDefault(sql,parameters);
+
+            if (lastTransaction == null)
+            {
+                output = false;
+            }
+            else
+            {
+                output = true;
+            }
+
+            return output;
+
         }
 
         public long Insert(OP_TRAN op_tran)

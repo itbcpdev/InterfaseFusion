@@ -12,6 +12,8 @@ namespace InterfaceFusion
 
         int GetLastOP_TRAN();
 
+        bool CheckIdOP_TRAN(int Id);
+
         long Insert(OP_TRAN op_tran);
 
         bool Update(OP_TRAN op_tran);

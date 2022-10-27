@@ -13,6 +13,15 @@ namespace InterfaceFusion
         IOP_TRANRepository op_tranRepository;
         FusionClass.Fusion cFusion = new FusionClass.Fusion();
 
+        public readonly string? nomG84 = ConfigurationManager.AppSettings["01"];
+        public readonly string? nomG90 = ConfigurationManager.AppSettings["02"];
+        public readonly string? nomG95 = ConfigurationManager.AppSettings["03"];
+        public readonly string? nomG97 = ConfigurationManager.AppSettings["04"];
+        public readonly string? nomDB5 = ConfigurationManager.AppSettings["05"];
+        public readonly string? nomGLP = ConfigurationManager.AppSettings["07"];
+        public readonly string? nomGR = ConfigurationManager.AppSettings["GR"];
+        public readonly string? nomGP = ConfigurationManager.AppSettings["GP"];
+
         public frmFusion()
         {
             InitializeComponent();
@@ -20,7 +29,7 @@ namespace InterfaceFusion
 
         private void frmFusion_Load(object sender, EventArgs e)
         {
-            txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];
+            txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];            
             op_tranRepository = new OP_TRANRepository();
             dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
             cFusion.Connection(txtFusionIp.Text);
@@ -38,7 +47,8 @@ namespace InterfaceFusion
             int LastFusionSaleId = 0;
             int LastSigesSaleId = 0;
             int PendingTransactions = 0;
-            OP_TRAN op_tran = new OP_TRAN();            
+            OP_TRAN op_tran = new OP_TRAN();
+            bool CheckIdOpTran = false;
 
             try
             {
@@ -69,17 +79,25 @@ namespace InterfaceFusion
 
                         if (op_tran.CONTROLADOR != null)
                         {
-                            op_tranRepository.Insert(op_tran);
 
-                            //Marcar transacción
+                            // Si el Id no existe en OP_TRAN se inserta
 
-                            bool ClearSale = false;
+                            CheckIdOpTran = op_tranRepository.CheckIdOP_TRAN(op_tran.C_INTERNO);
 
-                            ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
-
-                            if (!ClearSale)
+                            if (CheckIdOpTran == false)
                             {
-                                MessageBox.Show("Error al marcar venta");
+                                op_tranRepository.Insert(op_tran);
+
+                                //Marcar transacción
+
+                                bool ClearSale = false;
+
+                                ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
+
+                                if (!ClearSale)
+                                {
+                                    MessageBox.Show("Error al marcar venta");
+                                }
                             }
                         } 
                     }
@@ -157,31 +175,44 @@ namespace InterfaceFusion
                         op_tran.NUMERO = Convert.ToString(cFusionSale.GetSaleID());
                         op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
 
-                        switch (gradeName)
+                        if (gradeName == nomG84)
                         {
-                            case "G84":
-                                op_tran.PRODUCTO = "01";
-                                break;
-                            case "G90":
-                                op_tran.PRODUCTO = "02";
-                                break;
-                            case "G95":
-                                op_tran.PRODUCTO = "03";
-                                break;
-                            case "G97":
-                                op_tran.PRODUCTO = "03";
-                                break;
-                            case "DB5":
-                                op_tran.PRODUCTO = "05";
-                                break;
-                            case "GLP":
-                                op_tran.PRODUCTO = "07";
-                                break;
-                            default:
-                                op_tran.PRODUCTO = gradeName;
-                                break;
+                            op_tran.PRODUCTO = "01";
                         }
-                        
+                        if (gradeName == nomG90)
+                        {
+                            op_tran.PRODUCTO = "02";
+                        }
+                        if (gradeName == nomG95)
+                        {
+                            op_tran.PRODUCTO = "03";
+                        }
+                        if (gradeName == nomG97)
+                        {
+                            op_tran.PRODUCTO = "04";
+                        }
+                        if (gradeName == nomDB5)
+                        {
+                            op_tran.PRODUCTO = "05";
+                        }
+                        if (gradeName == nomGLP)
+                        {
+                            op_tran.PRODUCTO = "07";
+                        }
+                        if (gradeName == nomGR)
+                        {
+                            op_tran.PRODUCTO = "GR";
+                        }
+                        if (gradeName == nomGP)
+                        {
+                            op_tran.PRODUCTO = "GP";
+                        }
+
+                        if (op_tran.PRODUCTO == null)
+                        {
+                            op_tran.PRODUCTO = gradeName;
+                        }
+
                         op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
                         op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
                         op_tran.CARA = Convert.ToString(cFusionSale.GetPumpNr()).PadLeft(2,'0');
