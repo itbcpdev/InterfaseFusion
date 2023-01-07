@@ -76,6 +76,7 @@ namespace InterfaceFusion
             using IDbConnection db = new SqlConnection(AppConnection.ConnectionString);
             if (db.State == ConnectionState.Closed)
                 db.Open();
+
             bool output = false;
 
             var parameters = new { c_interno = Id};
@@ -85,7 +86,19 @@ namespace InterfaceFusion
 
             if (lastTransaction == null)
             {
-                output = false;
+
+                sql = "select top 1 C_INTERNO from OP_TRAN_HIS WHERE C_INTERNO = @c_interno";
+                lastTransaction = db.QuerySingleOrDefault(sql, parameters);
+
+                if (lastTransaction == null)
+                {
+                    output = false;
+                }
+                else
+                {
+                    output = true;
+                }
+
             }
             else
             {

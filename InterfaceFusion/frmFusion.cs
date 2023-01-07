@@ -29,7 +29,7 @@ namespace InterfaceFusion
 
         private void frmFusion_Load(object sender, EventArgs e)
         {
-            txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];            
+            txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];
             op_tranRepository = new OP_TRANRepository();
             dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
             cFusion.Connection(txtFusionIp.Text);
@@ -371,6 +371,11 @@ namespace InterfaceFusion
             {                
                 MessageBox.Show(ex.Message);                
             }
+        }
+
+        private void btnRefreshData_Click(object sender, EventArgs e)
+        {
+            dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
         }
     }
 }

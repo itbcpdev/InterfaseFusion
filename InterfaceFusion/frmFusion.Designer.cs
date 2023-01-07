@@ -53,6 +53,7 @@
             this.btnConectar = new System.Windows.Forms.Button();
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.tmrFusionReconnect = new System.Windows.Forms.Timer(this.components);
+            this.btnRefreshData = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTransactions)).BeginInit();
             this.SuspendLayout();
             // 
@@ -237,7 +238,7 @@
             // 
             // btnConectar
             // 
-            this.btnConectar.Location = new System.Drawing.Point(10, 547);
+            this.btnConectar.Location = new System.Drawing.Point(139, 547);
             this.btnConectar.Name = "btnConectar";
             this.btnConectar.Size = new System.Drawing.Size(123, 23);
             this.btnConectar.TabIndex = 3;
@@ -247,7 +248,7 @@
             // 
             // txtMessage
             // 
-            this.txtMessage.Location = new System.Drawing.Point(139, 547);
+            this.txtMessage.Location = new System.Drawing.Point(268, 548);
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
             this.txtMessage.Size = new System.Drawing.Size(170, 23);
@@ -257,11 +258,22 @@
             // 
             this.tmrFusionReconnect.Tick += new System.EventHandler(this.tmrFusionReconnect_Tick);
             // 
+            // btnRefreshData
+            // 
+            this.btnRefreshData.Location = new System.Drawing.Point(10, 547);
+            this.btnRefreshData.Name = "btnRefreshData";
+            this.btnRefreshData.Size = new System.Drawing.Size(123, 23);
+            this.btnRefreshData.TabIndex = 5;
+            this.btnRefreshData.Text = "Refrescar Datos";
+            this.btnRefreshData.UseVisualStyleBackColor = true;
+            this.btnRefreshData.Click += new System.EventHandler(this.btnRefreshData_Click);
+            // 
             // frmFusion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1113, 582);
+            this.Controls.Add(this.btnRefreshData);
             this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.btnConectar);
             this.Controls.Add(this.txtFusionIp);
@@ -304,5 +316,6 @@
         private DataGridViewTextBoxColumn montofinal;
         private TextBox txtMessage;
         private System.Windows.Forms.Timer tmrFusionReconnect;
+        private Button btnRefreshData;
     }
 }
