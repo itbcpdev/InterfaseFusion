@@ -10,7 +10,7 @@ namespace InterfaceFusion
         [STAThread]
         static void Main()
         {
-
+        
             if (PriorProcess() != null)
             {
                 MessageBox.Show("La interface ya se encuentra en ejecución");
@@ -19,9 +19,15 @@ namespace InterfaceFusion
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();            
+            ApplicationConfiguration.Initialize();
+            Application.ThreadException += new ThreadExceptionEventHandler(ThreadException);
             Application.Run(new frmFusion());
             Environment.Exit(1);
+        }
+
+        static void ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            //Log.Error(e.Exception, e.Exception.Message);
         }
 
         public static Process PriorProcess()

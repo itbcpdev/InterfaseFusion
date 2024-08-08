@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFusion));
             this.dgvTransactions = new System.Windows.Forms.DataGridView();
             this.numero = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,8 +52,8 @@
             this.txtFusionIp = new System.Windows.Forms.TextBox();
             this.btnConectar = new System.Windows.Forms.Button();
             this.txtMessage = new System.Windows.Forms.TextBox();
-            this.tmrFusionReconnect = new System.Windows.Forms.Timer(this.components);
             this.btnRefreshData = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTransactions)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,14 +63,14 @@
             this.dgvTransactions.AllowUserToDeleteRows = false;
             this.dgvTransactions.AllowUserToResizeColumns = false;
             this.dgvTransactions.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvTransactions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTransactions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvTransactions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTransactions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.numero,
@@ -91,18 +91,18 @@
             this.dgvTransactions.MultiSelect = false;
             this.dgvTransactions.Name = "dgvTransactions";
             this.dgvTransactions.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvTransactions.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTransactions.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvTransactions.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvTransactions.RowTemplate.Height = 25;
             this.dgvTransactions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTransactions.Size = new System.Drawing.Size(1088, 485);
+            this.dgvTransactions.Size = new System.Drawing.Size(932, 485);
             this.dgvTransactions.TabIndex = 0;
             // 
             // numero
@@ -187,10 +187,10 @@
             // manguera
             // 
             this.manguera.DataPropertyName = "MANGUERA";
-            this.manguera.HeaderText = "Manguera";
+            this.manguera.HeaderText = "Mang.";
             this.manguera.Name = "manguera";
             this.manguera.ReadOnly = true;
-            this.manguera.Width = 75;
+            this.manguera.Width = 65;
             // 
             // fecsistema
             // 
@@ -254,10 +254,6 @@
             this.txtMessage.Size = new System.Drawing.Size(170, 23);
             this.txtMessage.TabIndex = 4;
             // 
-            // tmrFusionReconnect
-            // 
-            this.tmrFusionReconnect.Tick += new System.EventHandler(this.tmrFusionReconnect_Tick);
-            // 
             // btnRefreshData
             // 
             this.btnRefreshData.Location = new System.Drawing.Point(10, 547);
@@ -268,11 +264,15 @@
             this.btnRefreshData.UseVisualStyleBackColor = true;
             this.btnRefreshData.Click += new System.EventHandler(this.btnRefreshData_Click);
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
             // frmFusion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1113, 582);
+            this.ClientSize = new System.Drawing.Size(952, 582);
             this.Controls.Add(this.btnRefreshData);
             this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.btnConectar);
@@ -300,6 +300,9 @@
         private Label label1;
         private TextBox txtFusionIp;
         private Button btnConectar;
+        private TextBox txtMessage;
+        private Button btnRefreshData;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private DataGridViewTextBoxColumn numero;
         private DataGridViewTextBoxColumn soles;
         private DataGridViewTextBoxColumn producto;
@@ -314,8 +317,5 @@
         private DataGridViewTextBoxColumn fecsistema;
         private DataGridViewTextBoxColumn volumenfinal;
         private DataGridViewTextBoxColumn montofinal;
-        private TextBox txtMessage;
-        private System.Windows.Forms.Timer tmrFusionReconnect;
-        private Button btnRefreshData;
     }
 }

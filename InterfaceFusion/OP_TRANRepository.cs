@@ -24,7 +24,7 @@ namespace InterfaceFusion
             if (db.State == ConnectionState.Closed)
                 db.Open();
 
-            return db.Query<OP_TRAN_Dto>("select NUMERO, SOLES, PRODUCTO, PRECIO, GALONES, CARA, HORA, DOCUMENTO, DATEPROCE, CDTIPODOC, MANGUERA, FECSISTEMA, VolumenFinal, MontoFinal from OP_TRAN ORDER BY C_INTERNO DESC", commandType: CommandType.Text);
+            return db.Query<OP_TRAN_Dto>("SELECT NUMERO, SOLES, PRODUCTO, PRECIO, GALONES, CARA, HORA, DOCUMENTO, DATEPROCE, CDTIPODOC, MANGUERA, FECSISTEMA, VolumenFinal, MontoFinal FROM OP_TRAN WITH (NOLOCK) ORDER BY C_INTERNO DESC", commandType: CommandType.Text);
             //return db.GetAll<OP_TRAN>();
         }
 
@@ -45,12 +45,12 @@ namespace InterfaceFusion
 
             int output = 0;
 
-            var sql = "select top 1 C_INTERNO from OP_TRAN ORDER BY C_INTERNO DESC";
+            var sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN WITH (NOLOCK) ORDER BY C_INTERNO DESC";
             var lastTransaction = db.QuerySingleOrDefault(sql);
 
             if (lastTransaction == null)
             {
-                sql = "select top 1 C_INTERNO from OP_TRAN_HIS ORDER BY C_INTERNO DESC";
+                sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN_HIS WITH (NOLOCK) ORDER BY C_INTERNO DESC";
                 lastTransaction = db.QuerySingleOrDefault(sql);
 
                 if (lastTransaction == null)
