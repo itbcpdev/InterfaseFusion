@@ -1,3 +1,4 @@
+D:\Entregables\Interface Fusion\NLog.config
 D:\Entregables\Interface Fusion\InterfaceFusion.exe
 D:\Entregables\Interface Fusion\InterfaceFusion.dll
 D:\Entregables\Interface Fusion\InterfaceFusion.deps.json
@@ -6,6 +7,15 @@ D:\Entregables\Interface Fusion\InterfaceFusion.dll.config
 D:\Entregables\Interface Fusion\InterfaceFusion.pdb
 D:\Entregables\Interface Fusion\Dapper.dll
 D:\Entregables\Interface Fusion\Dapper.Contrib.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.DependencyInjection.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.Logging.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.Options.dll
+D:\Entregables\Interface Fusion\Microsoft.Extensions.Primitives.dll
+D:\Entregables\Interface Fusion\NLog.dll
+D:\Entregables\Interface Fusion\NLog.Extensions.Logging.dll
 D:\Entregables\Interface Fusion\System.Data.SqlClient.dll
 D:\Entregables\Interface Fusion\sni.dll
 D:\Entregables\Interface Fusion\FusionClass.dll

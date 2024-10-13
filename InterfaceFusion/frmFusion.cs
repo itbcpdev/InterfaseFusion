@@ -1,6 +1,9 @@
 using System.Configuration;
 using System.ComponentModel;
 using NLog;
+using FusionClass;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace InterfaceFusion
 {
@@ -8,16 +11,19 @@ namespace InterfaceFusion
     {
 
         IOP_TRANRepository op_tranRepository;
+        ITANKS_INFORepository tanks_infoRepository;
+
         FusionClass.Fusion cFusion = new FusionClass.Fusion();
 
-        public readonly string? nomG84 = ConfigurationManager.AppSettings["01"];
-        public readonly string? nomG90 = ConfigurationManager.AppSettings["02"];
-        public readonly string? nomG95 = ConfigurationManager.AppSettings["03"];
-        public readonly string? nomG97 = ConfigurationManager.AppSettings["04"];
-        public readonly string? nomDB5 = ConfigurationManager.AppSettings["05"];
-        public readonly string? nomGLP = ConfigurationManager.AppSettings["07"];
-        public readonly string? nomGR = ConfigurationManager.AppSettings["GR"];
-        public readonly string? nomGP = ConfigurationManager.AppSettings["GP"];
+        //public readonly string? nomG84 = ConfigurationManager.AppSettings["01"];
+        //public readonly string? nomG90 = ConfigurationManager.AppSettings["02"];
+        //public readonly string? nomG95 = ConfigurationManager.AppSettings["03"];
+        //public readonly string? nomG97 = ConfigurationManager.AppSettings["04"];
+        //public readonly string? nomDB5 = ConfigurationManager.AppSettings["05"];
+        //public readonly string? nomGLP = ConfigurationManager.AppSettings["07"];
+        //public readonly string? nomGR = ConfigurationManager.AppSettings["12"];
+        //public readonly string? nomGP = ConfigurationManager.AppSettings["13"];
+
         public readonly int delayWorker = Convert.ToInt16(ConfigurationManager.AppSettings["GetSaleInterval"]) * 1000; //Intervalo en segundos según configuración
         readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -197,45 +203,7 @@ namespace InterfaceFusion
                         op_tran.NUMERO = Convert.ToString(cFusionSale.GetSaleID());
                         op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
                         //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount()) / 100;
-
-                        if (gradeName == nomG84)
-                        {
-                            op_tran.PRODUCTO = "01";
-                        }
-                        if (gradeName == nomG90)
-                        {
-                            op_tran.PRODUCTO = "02";
-                        }
-                        if (gradeName == nomG95)
-                        {
-                            op_tran.PRODUCTO = "03";
-                        }
-                        if (gradeName == nomG97)
-                        {
-                            op_tran.PRODUCTO = "04";
-                        }
-                        if (gradeName == nomDB5)
-                        {
-                            op_tran.PRODUCTO = "05";
-                        }
-                        if (gradeName == nomGLP)
-                        {
-                            op_tran.PRODUCTO = "07";
-                        }
-                        if (gradeName == nomGR)
-                        {
-                            op_tran.PRODUCTO = "GR";
-                        }
-                        if (gradeName == nomGP)
-                        {
-                            op_tran.PRODUCTO = "GP";
-                        }
-
-                        if (op_tran.PRODUCTO == null)
-                        {
-                            op_tran.PRODUCTO = gradeName;
-                        }
-
+                        op_tran.PRODUCTO = GetProductId(gradeName);
                         op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
                         //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU()) / 100000;
                         op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
@@ -273,6 +241,50 @@ namespace InterfaceFusion
             }
 
             return op_tran;
+        }
+
+        public TANKS_INFO GetTankInfo(int tank) 
+        {
+            TANKS_INFO tanks_info = new TANKS_INFO();
+
+            if (cFusion.ConnectionStatus())
+            {
+
+                try
+                {
+
+                    FusionTankInfo info = new FusionTankInfo();
+
+                    cFusion.GetTankInfo(tank, info);
+
+                    string gradeName = "";
+
+                    cFusion.GetGrade(info.GetProductNr(), ref gradeName);
+                    
+                    tanks_info.TankNr = info.GetTankNr();
+                    tanks_info.ProductNr = info.GetProductNr();
+                    tanks_info.ProductId = GetProductId(gradeName);
+                    tanks_info.DatelastMeasure = info.GetDateLastMeasure();
+                    tanks_info.TimeLastMeasure = info.GetTimeLastMeasure();
+                    tanks_info.Alarms = info.GetAlarms();
+                    tanks_info.FuelHeight = Convert.ToDecimal(info.GetFuelHeight());
+                    tanks_info.FuelTemp = Convert.ToDecimal(info.GetFuelTemperature());
+                    tanks_info.FuelVolume = Convert.ToDecimal(info.GetFuelVolume());
+                    tanks_info.MeasureUnit = info.GetTankMeasureUnitType();
+                    tanks_info.TemperatureUnit = info.GetTankTemperatureUnitType();
+                    tanks_info.WaterHeight = Convert.ToDecimal(info.GetWaterHeight());
+                    tanks_info.WaterVolume = Convert.ToDecimal(info.GetWaterVolume());
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, ex.Message);
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            return tanks_info;
+
         }
 
         public int GetLastSaleFusion()
@@ -400,6 +412,63 @@ namespace InterfaceFusion
             return true;
         }
 
+        public string GetProductId(string gradeName)
+        {
+
+            string? nomG84 = ConfigurationManager.AppSettings["01"];
+            string? nomG90 = ConfigurationManager.AppSettings["02"];
+            string? nomG95 = ConfigurationManager.AppSettings["03"];
+            string? nomG97 = ConfigurationManager.AppSettings["04"];
+            string? nomDB5 = ConfigurationManager.AppSettings["05"];
+            string? nomGLP = ConfigurationManager.AppSettings["07"];
+            string? nomGR = ConfigurationManager.AppSettings["12"];
+            string? nomGP = ConfigurationManager.AppSettings["13"];
+
+            string productId = "";
+
+            gradeName = Regex.Replace(gradeName, @"\s+", "");
+
+            if (gradeName == nomG84)
+            {
+                productId = "01";
+            }
+            if (gradeName == nomG90)
+            {
+                productId = "02";
+            }
+            if (gradeName == nomG95)
+            {
+                productId = "03";
+            }
+            if (gradeName == nomG97)
+            {
+                productId = "04";
+            }
+            if (gradeName == nomDB5)
+            {
+                productId = "05";
+            }
+            if (gradeName == nomGLP)
+            {
+                productId = "07";
+            }
+            if (gradeName == nomGR)
+            {
+                productId = "12";
+            }
+            if (gradeName == nomGP)
+            {
+                productId = "13";
+            }
+
+            if (productId == null)
+            {
+                productId = gradeName;
+            }
+
+            return productId;
+        }
+
         private void frmFusion_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -426,12 +495,16 @@ namespace InterfaceFusion
             while (!backgroundWorker1.CancellationPending)
             {
                 op_tranRepository = new OP_TRANRepository();
+                tanks_infoRepository = new TANKS_INFORepository();
 
                 int LastFusionSaleId = 0;
                 int LastSigesSaleId = 0;
                 int PendingTransactions = 0;
                 OP_TRAN op_tran = new OP_TRAN();
-                bool CheckIdOpTran = false;                
+                TANKS_INFO tanks_info = new TANKS_INFO();
+                TANKS_INFO_HIST tanks_info_hist = new TANKS_INFO_HIST();
+                bool CheckIdOpTran = false;
+                bool CheckTankNumber = false;
 
                 try
                 {
@@ -516,14 +589,55 @@ namespace InterfaceFusion
 
                     }
 
-                    //Obtener transacciones OP_TRAN
+                    //Obtener información de tanques
 
-                    //var optran = op_tranRepository.GetAllOP_TRAN();
+                    for (int i = 1; i < 5; i++) //Cuatro tanques
+                    {
 
-                    //dgvTransactions.Invoke(new Action(() =>
-                    //{
-                    //    dgvTransactions.DataSource = optran;
-                    //}));
+                        logger.Info("Obteniendo info de tanque: " + i);
+
+                        tanks_info = GetTankInfo(i);
+                        DateTime dateTimeMeasure = DateTime.Now;
+
+                        if (tanks_info.ProductNr > 0)
+                        {
+                            CheckTankNumber = tanks_infoRepository.CheckTankTANK_INFO(tanks_info.TankNr);
+
+                            if (CheckTankNumber == false)
+                            {
+                                logger.Info("Insertando info de tanque: " + i);
+
+                                tanks_infoRepository.Insert(tanks_info);
+
+                            }
+                            else
+                            {
+                                logger.Info("Actualizando info de tanque: " + i);
+
+                                tanks_infoRepository.Update(tanks_info);
+                            }
+
+                            logger.Info("Insertando en historial info de tanque: " + i);
+
+                            tanks_info_hist.TankNr = tanks_info.TankNr;
+                            tanks_info_hist.ProductNr = tanks_info.ProductNr;
+                            tanks_info_hist.ProductId = tanks_info.ProductId;
+                            tanks_info_hist.DatelastMeasure = tanks_info.DatelastMeasure;
+                            tanks_info_hist.TimeLastMeasure = tanks_info.TimeLastMeasure;
+                            tanks_info_hist.Alarms = tanks_info.Alarms;
+                            tanks_info_hist.FuelHeight = tanks_info.FuelHeight;
+                            tanks_info_hist.FuelTemp = tanks_info.FuelTemp;
+                            tanks_info_hist.FuelVolume = tanks_info.FuelVolume;
+                            tanks_info_hist.MeasureUnit = tanks_info.MeasureUnit;
+                            tanks_info_hist.TemperatureUnit = tanks_info.TemperatureUnit;
+                            tanks_info_hist.WaterHeight = tanks_info.WaterHeight;
+                            tanks_info_hist.WaterVolume = tanks_info.WaterVolume;
+                            tanks_info_hist.DateTimeMeasure = dateTimeMeasure;
+
+                            tanks_infoRepository.InsertHist(tanks_info_hist);
+
+                        }
+                    }
 
                 }
                 catch (Exception ex)
