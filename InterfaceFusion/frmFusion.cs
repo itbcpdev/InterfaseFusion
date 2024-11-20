@@ -607,12 +607,16 @@ namespace InterfaceFusion
                             {
                                 logger.Info("Insertando info de tanque: " + i);
 
+                                tanks_info.Estado = "A";
+
                                 tanks_infoRepository.Insert(tanks_info);
 
                             }
                             else
                             {
                                 logger.Info("Actualizando info de tanque: " + i);
+
+                                tanks_info.Estado = "M";
 
                                 tanks_infoRepository.Update(tanks_info);
                             }

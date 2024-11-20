@@ -8,14 +8,15 @@ BEGIN
 							 ProductId CHAR(20),
 							 DateLastMeasure CHAR(8),
 							 TimeLastMeasure CHAR(6),
-							 Alarms VARCHAR(20),
+							 Alarms VARCHAR(120),
 							 FuelHeight NUMERIC(14,5),
 							 FuelTemp NUMERIC(14,5),
 							 FuelVolume NUMERIC(14,5),
 							 MeasureUnit CHAR(5),
 							 TemperatureUnit CHAR(1),
 							 WaterHeight NUMERIC(14,5),
-							 WaterVolume NUMERIC(14,5))
+							 WaterVolume NUMERIC(14,5),
+							 Estado CHAR(1))
 END
 GO
 
@@ -26,7 +27,7 @@ BEGIN
 								  ProductId CHAR(20),
 								  DateLastMeasure CHAR(8),
 								  TimeLastMeasure CHAR(6),
-								  Alarms VARCHAR(20),
+								  Alarms VARCHAR(120),
 								  FuelHeight NUMERIC(14,5),
 								  FuelTemp NUMERIC(14,5),
 								  FuelVolume NUMERIC(14,5),

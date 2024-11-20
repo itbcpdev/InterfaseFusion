@@ -20,5 +20,6 @@ namespace InterfaceFusion
         public string alarms { get; set; }
         public string dateLastMeasure { get; set; }
         public string timeLastMeasure { get; set; }
+        public string estado { get; set; }
     }
 }

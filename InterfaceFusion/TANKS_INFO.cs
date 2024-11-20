@@ -24,6 +24,7 @@ namespace InterfaceFusion
         public string? TemperatureUnit { get; set; }
         public decimal WaterHeight { get; set; }
         public decimal WaterVolume { get; set; }
+        public string? Estado { get; set; }
 
     }
 }
