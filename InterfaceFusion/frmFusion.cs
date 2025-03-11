@@ -201,13 +201,13 @@ namespace InterfaceFusion
                         op_tran.C_INTERNO = cFusionSale.GetSaleID();
                         op_tran.CONTROLADOR = "01";
                         op_tran.NUMERO = Convert.ToString(cFusionSale.GetSaleID());
-                        op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
-                        //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount()) / 100;
+                        //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
+                        op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount()) / 100;
                         op_tran.PRODUCTO = GetProductId(gradeName);
-                        op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
-                        //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU()) / 100000;
-                        op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
-                        //op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume()) / 100000;
+                        //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
+                        op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU()) / 100000;
+                        //op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
+                        op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume()) / 100000;
                         op_tran.CARA = Convert.ToString(cFusionSale.GetPumpNr()).PadLeft(2, '0');
                         op_tran.FECHA = DateTime.Now.Date;
                         op_tran.HORA = DateTime.Now;
@@ -218,8 +218,8 @@ namespace InterfaceFusion
                         op_tran.CDTIPODOC = null;
                         op_tran.MANGUERA = cFusionSale.GetHoseNr();
                         op_tran.FECSISTEMA = DateTime.Now;
-                        op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume());
-                        //op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume()) / 100000;
+                        //op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume());
+                        op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume()) / 100000;
                         op_tran.MontoFinal = 0;
                         //op_tran.VolumenFinal = Convert.ToDecimal(totalVolume);
                         //op_tran.MontoFinal = Convert.ToDecimal(totalMoney);
@@ -420,7 +420,7 @@ namespace InterfaceFusion
             string? nomG95 = ConfigurationManager.AppSettings["03"];
             string? nomG97 = ConfigurationManager.AppSettings["04"];
             string? nomDB5 = ConfigurationManager.AppSettings["05"];
-            string? nomGLP = ConfigurationManager.AppSettings["07"];
+            string? nomGLP = ConfigurationManager.AppSettings["06"];
             string? nomGR = ConfigurationManager.AppSettings["12"];
             string? nomGP = ConfigurationManager.AppSettings["13"];
 
@@ -450,7 +450,7 @@ namespace InterfaceFusion
             }
             if (gradeName == nomGLP)
             {
-                productId = "07";
+                productId = "06";
             }
             if (gradeName == nomGR)
             {
@@ -591,7 +591,7 @@ namespace InterfaceFusion
 
                     //Obtener información de tanques
 
-                    for (int i = 1; i < 5; i++) //Cuatro tanques
+                    for (int i = 1; i < 4; i++) //Tres tanques
                     {
 
                         logger.Info("Obteniendo info de tanque: " + i);
