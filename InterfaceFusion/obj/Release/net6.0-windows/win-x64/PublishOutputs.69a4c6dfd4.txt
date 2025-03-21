@@ -14,6 +14,7 @@ D:\Entregables\Interface Fusion\Microsoft.Extensions.Logging.dll
 D:\Entregables\Interface Fusion\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Entregables\Interface Fusion\Microsoft.Extensions.Options.dll
 D:\Entregables\Interface Fusion\Microsoft.Extensions.Primitives.dll
+D:\Entregables\Interface Fusion\Newtonsoft.Json.dll
 D:\Entregables\Interface Fusion\NLog.dll
 D:\Entregables\Interface Fusion\NLog.Extensions.Logging.dll
 D:\Entregables\Interface Fusion\System.Data.SqlClient.dll

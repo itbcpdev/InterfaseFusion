@@ -45,12 +45,12 @@ namespace InterfaceFusion
 
             int output = 0;
 
-            var sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN WITH (NOLOCK) ORDER BY C_INTERNO DESC";
+            var sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN WITH (NOLOCK) WHERE MONTOFINAL = 0 ORDER BY C_INTERNO DESC";
             var lastTransaction = db.QuerySingleOrDefault(sql);
 
             if (lastTransaction == null)
             {
-                sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN_HIS WITH (NOLOCK) ORDER BY C_INTERNO DESC";
+                sql = "SELECT TOP 1 C_INTERNO FROM OP_TRAN_HIS WITH (NOLOCK) WHERE MONTOFINAL = 0 ORDER BY C_INTERNO DESC";
                 lastTransaction = db.QuerySingleOrDefault(sql);
 
                 if (lastTransaction == null)

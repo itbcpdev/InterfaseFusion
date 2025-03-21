@@ -93,3 +93,4 @@ D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\NLog.dll
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\NLog.Extensions.Logging.dll
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\System.Data.SqlClient.dll
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\FusionClass.dll
+D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\Newtonsoft.Json.dll

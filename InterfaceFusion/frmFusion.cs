@@ -4,6 +4,11 @@ using NLog;
 using FusionClass;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using static System.Net.Mime.MediaTypeNames;
+using System.Globalization;
+using Newtonsoft.Json.Serialization;
+using System.Text;
 
 namespace InterfaceFusion
 {
@@ -15,16 +20,8 @@ namespace InterfaceFusion
 
         FusionClass.Fusion cFusion = new FusionClass.Fusion();
 
-        //public readonly string? nomG84 = ConfigurationManager.AppSettings["01"];
-        //public readonly string? nomG90 = ConfigurationManager.AppSettings["02"];
-        //public readonly string? nomG95 = ConfigurationManager.AppSettings["03"];
-        //public readonly string? nomG97 = ConfigurationManager.AppSettings["04"];
-        //public readonly string? nomDB5 = ConfigurationManager.AppSettings["05"];
-        //public readonly string? nomGLP = ConfigurationManager.AppSettings["07"];
-        //public readonly string? nomGR = ConfigurationManager.AppSettings["12"];
-        //public readonly string? nomGP = ConfigurationManager.AppSettings["13"];
-
         public readonly int delayWorker = Convert.ToInt16(ConfigurationManager.AppSettings["GetSaleInterval"]) * 1000; //Intervalo en segundos según configuración
+        public string? testMode = ConfigurationManager.AppSettings["TestMode"];
         readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public frmFusion()
@@ -36,7 +33,9 @@ namespace InterfaceFusion
         {
             txtFusionIp.Text = ConfigurationManager.AppSettings["IpFusion"];
             op_tranRepository = new OP_TRANRepository();
-                        
+
+            SendLogToServer();
+
             try
             {
                 dgvTransactions.DataSource = op_tranRepository.GetAllOP_TRAN();
@@ -173,6 +172,7 @@ namespace InterfaceFusion
         {
 
             OP_TRAN op_tran = new OP_TRAN();
+            string? divideAmounts = ConfigurationManager.AppSettings["DivideAmounts"];
 
             //cFusion.Connection(txtFusionIp.Text);
 
@@ -195,19 +195,40 @@ namespace InterfaceFusion
 
                         //string totalVolume = "";
                         //string totalMoney = "";
-
                         //cFusion.GetTotalizers(cFusionSale.GetPumpNr(), cFusionSale.GetHoseNr(), ref totalVolume, ref totalMoney);
+
+                        //logger.Info("SOLES: " + cFusionSale.GetAmount());
 
                         op_tran.C_INTERNO = cFusionSale.GetSaleID();
                         op_tran.CONTROLADOR = "01";
                         op_tran.NUMERO = Convert.ToString(cFusionSale.GetSaleID());
-                        //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
-                        op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount()) / 100;
                         op_tran.PRODUCTO = GetProductId(gradeName);
-                        //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
-                        op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU()) / 100000;
-                        //op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
-                        op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume()) / 100000;
+
+                        if (divideAmounts == "1")
+                        {
+                            op_tran.SOLES = decimal.Parse(cFusionSale.GetAmount(), CultureInfo.InvariantCulture) / 100;
+                            op_tran.PRECIO = decimal.Parse(cFusionSale.GetPPU(), CultureInfo.InvariantCulture) / 100000;
+                            op_tran.GALONES = decimal.Parse(cFusionSale.GetVolume(), CultureInfo.InvariantCulture) / 100000;
+                            op_tran.VolumenFinal = decimal.Parse(cFusionSale.GetFinalVolume(), CultureInfo.InvariantCulture) / 100000;
+
+                            //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount()) / 100;
+                            //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU()) / 100000;
+                            //op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume()) / 100000;
+                            //op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume()) / 100000;
+                        }
+                        else 
+                        {
+                            op_tran.SOLES = decimal.Parse(cFusionSale.GetAmount(), CultureInfo.InvariantCulture);
+                            op_tran.PRECIO = decimal.Parse(cFusionSale.GetPPU(), CultureInfo.InvariantCulture);
+                            op_tran.GALONES = decimal.Parse(cFusionSale.GetVolume(), CultureInfo.InvariantCulture);
+                            op_tran.VolumenFinal = decimal.Parse(cFusionSale.GetFinalVolume(), CultureInfo.InvariantCulture);
+
+                            //op_tran.SOLES = Convert.ToDecimal(cFusionSale.GetAmount());
+                            //op_tran.PRECIO = Convert.ToDecimal(cFusionSale.GetPPU());
+                            //op_tran.GALONES = Convert.ToDecimal(cFusionSale.GetVolume());
+                            //op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume());
+                        }
+
                         op_tran.CARA = Convert.ToString(cFusionSale.GetPumpNr()).PadLeft(2, '0');
                         op_tran.FECHA = DateTime.Now.Date;
                         op_tran.HORA = DateTime.Now;
@@ -217,9 +238,7 @@ namespace InterfaceFusion
                         op_tran.DATEPROCE = null;
                         op_tran.CDTIPODOC = null;
                         op_tran.MANGUERA = cFusionSale.GetHoseNr();
-                        op_tran.FECSISTEMA = DateTime.Now;
-                        //op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume());
-                        op_tran.VolumenFinal = Convert.ToDecimal(cFusionSale.GetFinalVolume()) / 100000;
+                        op_tran.FECSISTEMA = DateTime.Now;                                             
                         op_tran.MontoFinal = 0;
                         //op_tran.VolumenFinal = Convert.ToDecimal(totalVolume);
                         //op_tran.MontoFinal = Convert.ToDecimal(totalMoney);
@@ -267,13 +286,18 @@ namespace InterfaceFusion
                     tanks_info.DatelastMeasure = info.GetDateLastMeasure();
                     tanks_info.TimeLastMeasure = info.GetTimeLastMeasure();
                     tanks_info.Alarms = info.GetAlarms();
-                    tanks_info.FuelHeight = Convert.ToDecimal(info.GetFuelHeight());
-                    tanks_info.FuelTemp = Convert.ToDecimal(info.GetFuelTemperature());
-                    tanks_info.FuelVolume = Convert.ToDecimal(info.GetFuelVolume());
+                    tanks_info.FuelHeight = decimal.Parse(info.GetFuelHeight(), CultureInfo.InvariantCulture);
+                    tanks_info.FuelTemp = decimal.Parse(info.GetFuelTemperature(), CultureInfo.InvariantCulture);
+                    tanks_info.FuelVolume = decimal.Parse(info.GetFuelVolume(), CultureInfo.InvariantCulture);
+                    //tanks_info.FuelHeight = Convert.ToDecimal(info.GetFuelHeight());
+                    //tanks_info.FuelTemp = Convert.ToDecimal(info.GetFuelTemperature());
+                    //tanks_info.FuelVolume = Convert.ToDecimal(info.GetFuelVolume());
                     tanks_info.MeasureUnit = info.GetTankMeasureUnitType();
                     tanks_info.TemperatureUnit = info.GetTankTemperatureUnitType();
-                    tanks_info.WaterHeight = Convert.ToDecimal(info.GetWaterHeight());
-                    tanks_info.WaterVolume = Convert.ToDecimal(info.GetWaterVolume());
+                    tanks_info.WaterHeight = decimal.Parse(info.GetWaterHeight(), CultureInfo.InvariantCulture);
+                    tanks_info.WaterVolume = decimal.Parse(info.GetWaterVolume(), CultureInfo.InvariantCulture);
+                    //tanks_info.WaterHeight = Convert.ToDecimal(info.GetWaterHeight());
+                    //tanks_info.WaterVolume = Convert.ToDecimal(info.GetWaterVolume());
 
                 }
                 catch (Exception ex)
@@ -491,7 +515,9 @@ namespace InterfaceFusion
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {                        
+        {
+            cFusion.Connection(txtFusionIp.Text);
+
             while (!backgroundWorker1.CancellationPending)
             {
                 op_tranRepository = new OP_TRANRepository();
@@ -508,8 +534,7 @@ namespace InterfaceFusion
 
                 try
                 {
-                    cFusion.Connection(txtFusionIp.Text);
-
+                    
                     // Obtener última transacción de Fusion
 
                     LastFusionSaleId = GetLastSaleFusion();
@@ -520,7 +545,7 @@ namespace InterfaceFusion
 
                     LastSigesSaleId = op_tranRepository.GetLastOP_TRAN();
 
-                    logger.Info("Última transacción Siges: " + LastFusionSaleId.ToString());
+                    logger.Info("Última transacción Siges: " + LastSigesSaleId.ToString());
 
                     // Obtener diferencia según Id
 
@@ -554,21 +579,28 @@ namespace InterfaceFusion
 
                                     logger.Info("Insertando en Siges la transacción: " + LastSigesSaleId.ToString());
 
-                                    op_tranRepository.Insert(op_tran);
-
-                                    //Marcar transacción
-
-                                    bool ClearSale = false;
-
-                                    logger.Info("Marcando en Fusion transacción: " + LastSigesSaleId.ToString());
-
-                                    ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
-
-                                    if (!ClearSale)
+                                    if (testMode == "1")
                                     {
-                                        logger.Error("Error al marcar venta");
-                                        //MessageBox.Show("Error al marcar venta");
+                                        logger.Info(JsonConvert.SerializeObject(op_tran));
                                     }
+                                    else
+                                    {
+                                        op_tranRepository.Insert(op_tran);
+
+                                        //Marcar transacción
+
+                                        bool ClearSale = false;
+
+                                        logger.Info("Marcando en Fusion transacción: " + LastSigesSaleId.ToString());
+
+                                        ClearSale = ClearSaleFusion(op_tran.C_INTERNO);
+
+                                        if (!ClearSale)
+                                        {
+                                            logger.Error("Error al marcar venta");
+                                            //MessageBox.Show("Error al marcar venta");
+                                        }
+                                    }                                                                 
                                 }
                             }
                             else
@@ -591,7 +623,9 @@ namespace InterfaceFusion
 
                     //Obtener información de tanques
 
-                    for (int i = 1; i < 4; i++) //Tres tanques
+                    int tanksNumber = Convert.ToInt16(ConfigurationManager.AppSettings["TanksNumber"]) + 1;
+
+                    for (int i = 1; i < tanksNumber; i++)
                     {
 
                         logger.Info("Obteniendo info de tanque: " + i);
@@ -658,6 +692,34 @@ namespace InterfaceFusion
             }
 
             e.Cancel = true;
+        }
+
+        private async void SendLogToServer()
+        {
+
+            LocalDto local = new LocalDto();
+
+            LocalRepository localRepository = new LocalRepository();
+
+            local = localRepository.GetLocal();
+
+            using (var client = new HttpClient())
+            {
+
+                client.BaseAddress = new Uri("https://web-activa-service.itbcpwebservices.com");
+                //client.BaseAddress = new Uri("https://localhost:44365");
+                client.Timeout = TimeSpan.FromMinutes(120.00);
+
+                var json = JsonConvert.SerializeObject(local, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var result = client.PostAsync("/api/services/app/Sagitarius/SaveLogFusion", content).Result;
+
+            }
         }
     }
 }

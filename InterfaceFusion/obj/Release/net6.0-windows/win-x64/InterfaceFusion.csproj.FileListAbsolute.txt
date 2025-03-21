@@ -81,3 +81,4 @@ D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\win-x64\Mi
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\win-x64\NLog.dll
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\win-x64\NLog.Extensions.Logging.dll
 D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\win-x64\FusionClass.dll
+D:\Fuentes\InterfaseFusion\InterfaceFusion\bin\Release\net6.0-windows\win-x64\Newtonsoft.Json.dll
